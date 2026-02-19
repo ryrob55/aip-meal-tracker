@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+html, body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+  /* Enable touch scrolling globally */
+  touch-action: manipulation;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Scrollable containers need explicit touch-action */
+.overflow-y-auto,
+.overflow-auto {
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Hide cursor on display mode after inactivity */
+.cursor-auto-hide {
+  cursor: none;
+}
+
+.cursor-auto-hide:hover {
+  cursor: auto;
+}
+
+/* Calendar grid styles */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+}
+
+/* Smooth transitions for UI elements */
+.transition-smooth {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Touch-friendly scrolling */
+.touch-pan-y {
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent pull-to-refresh on scroll containers */
+.overscroll-y-contain {
+  overscroll-behavior-y: contain;
+}

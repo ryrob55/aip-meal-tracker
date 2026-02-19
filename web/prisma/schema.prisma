@@ -1,0 +1,295 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Recipe {
+  id            String         @id @default(uuid())
+  name          String
+  ingredients   Json
+  instructions  String
+  prepTime      Int?
+  cookTime      Int?
+  servings      Int?
+  tags          String[]
+  source        String?
+  imageUrl      String?
+  isDraft       Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  mealPlanItems MealPlanItem[]
+  aipMealEntries AIPMealEntry[]
+
+  // Nutritional data (per serving)
+  calories      Float?
+  protein       Float?
+  carbs         Float?
+  fiber         Float?
+  fat           Float?
+  netCarbs      Float?
+
+  // AIP compliance
+  isAIPCompliant Boolean       @default(false)
+}
+
+model MealPlan {
+  id            String         @id @default(uuid())
+  weekStartDate DateTime       @db.Date
+  status        MealPlanStatus @default(DRAFT)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  groceryList   GroceryList?
+  items         MealPlanItem[]
+}
+
+model MealPlanItem {
+  id         String   @id @default(uuid())
+  mealPlanId String
+  recipeId   String
+  date       DateTime @db.Date
+  servings   Int      @default(1)  // Number of servings for grocery list scaling
+  notes      String?
+  createdAt  DateTime @default(now())
+  mealPlan   MealPlan @relation(fields: [mealPlanId], references: [id], onDelete: Cascade)
+  recipe     Recipe   @relation(fields: [recipeId], references: [id])
+}
+
+model GroceryList {
+  id         String        @id @default(uuid())
+  mealPlanId String        @unique
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  items      GroceryItem[]
+  mealPlan   MealPlan      @relation(fields: [mealPlanId], references: [id], onDelete: Cascade)
+}
+
+model GroceryItem {
+  id            String      @id @default(uuid())
+  groceryListId String
+  name          String
+  quantity      String?
+  unit          String?
+  category      String      @default("Other")
+  recipeNames   String[]    @default([])
+  checked       Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  groceryList   GroceryList @relation(fields: [groceryListId], references: [id], onDelete: Cascade)
+
+  // AIP quality preferences
+  preferOrganic    Boolean  @default(false)
+  preferNonGMO     Boolean  @default(false)
+  preferGrassFed   Boolean  @default(false)
+  preferWildCaught Boolean  @default(false)
+  preferPasture    Boolean  @default(false)
+  qualityNotes     String?  // e.g., "grass-fed", "wild-caught", "organic only"
+  aipCompliant     Boolean  @default(true)
+}
+
+// ==================== AIP DIET MODELS ====================
+
+model AIPQuestionnaire {
+  id                String   @id @default(uuid())
+  name              String?
+
+  // Macro Targets
+  dailyCalories     Int      @default(2600)
+  dailyProtein      Int      @default(150)
+  dailyNetCarbs     Int      @default(80)
+
+  // Intermittent Fasting
+  eatingWindowStart String   @default("11:30") // HH:MM format
+  eatingWindowEnd   String   @default("18:30")
+
+  // Meal Preferences
+  includeSmoothie   Boolean  @default(true)
+  smoothieTime      String?  @default("11:30")
+  includeSnack      Boolean  @default(true)
+  snackTime         String?  @default("18:30")
+
+  // Morning Coffee
+  includeMorningCoffee Boolean @default(true)
+  morningCoffeeTime    String? @default("06:30")
+
+  // Protein Preferences
+  preferredProteins String[] @default([])
+
+  // Health Goals
+  healthGoals       String[] @default([])
+
+  // Leftover Rules
+  allowLeftovers    Boolean  @default(true)
+  maxLeftoverHours  Int      @default(24)
+
+  // Restrictions
+  restrictions      AIPRestriction[]
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model AIPRestriction {
+  id              String             @id @default(uuid())
+  questionnaireId String
+  foodName        String
+  restrictionType AIPRestrictionType
+  severity        AIPSeverity        @default(MODERATE)
+  notes           String?
+
+  questionnaire   AIPQuestionnaire   @relation(fields: [questionnaireId], references: [id], onDelete: Cascade)
+
+  @@unique([questionnaireId, foodName])
+}
+
+model AIPFood {
+  id              String          @id @default(uuid())
+  name            String          @unique
+  category        AIPFoodCategory
+  aipPhase        AIPPhase        @default(ELIMINATION)
+
+  // Nutritional Data (per 100g)
+  calories        Float           @default(0)
+  protein         Float           @default(0)
+  carbs           Float           @default(0)
+  fiber           Float           @default(0)
+  fat             Float           @default(0)
+  netCarbs        Float           @default(0)
+
+  // AIP-Specific
+  tyramineLevel   TyramineLevel   @default(LOW)
+  histamineLevel  HistamineLevel  @default(LOW)
+
+  // Quality Markers
+  preferOrganic    Boolean        @default(false)
+  preferNonGMO     Boolean        @default(false)
+  preferGrassFed   Boolean        @default(false)
+  preferWildCaught Boolean        @default(false)
+  preferPasture    Boolean        @default(false)
+
+  // Serving Info
+  servingSize      String?
+  servingSizeGrams Float?
+
+  createdAt        DateTime       @default(now())
+}
+
+// ==================== AIP DAILY TRACKING ====================
+
+model AIPDailyLog {
+  id        String         @id @default(uuid())
+  date      DateTime       @db.Date @unique
+  notes     String?
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  meals     AIPMealEntry[]
+}
+
+model AIPMealEntry {
+  id             String      @id @default(uuid())
+  dailyLogId     String
+  dailyLog       AIPDailyLog @relation(fields: [dailyLogId], references: [id], onDelete: Cascade)
+
+  mealType       MealType
+  mealName       String
+  scheduledTime  String?     // HH:MM format
+  servings       Float       @default(1)
+  isLeftover     Boolean     @default(false)
+  originalItemId String?     // Reference to original meal if leftover
+
+  // Link to recipe for dynamic macros
+  recipeId       String?
+  recipe         Recipe?     @relation(fields: [recipeId], references: [id])
+
+  // Macro tracking (fallback if no recipe linked)
+  calories       Float?
+  protein        Float?
+  carbs          Float?
+  fiber          Float?
+  fat            Float?
+  netCarbs       Float?
+
+  // Meal tracking (for progress reports)
+  eaten          Boolean     @default(false)
+  skipped        Boolean     @default(false)
+  eatenAt        DateTime?
+  actualServings Float?      // If different from planned servings
+  trackingNotes  String?     // Notes about the meal
+
+  // Index for multi-item support (EXTRA_SNACKS can have multiple per day)
+  itemIndex      Int         @default(0)
+
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@unique([dailyLogId, mealType, itemIndex])
+}
+
+// ==================== ENUMS ====================
+
+enum MealPlanStatus {
+  DRAFT
+  CONFIRMED
+}
+
+// AIP Enums
+enum AIPRestrictionType {
+  ALLERGY
+  INTOLERANCE
+  AVOID
+  MIGRAINE_TRIGGER
+  HIGH_TYRAMINE
+  HIGH_HISTAMINE
+}
+
+enum AIPSeverity {
+  MILD
+  MODERATE
+  SEVERE
+}
+
+enum AIPFoodCategory {
+  MEAT_POULTRY
+  MEAT_BEEF
+  MEAT_PORK
+  SEAFOOD
+  VEGETABLE
+  FRUIT
+  FAT_OIL
+  HERB_SPICE
+  BROTH
+  SMOOTHIE_INGREDIENT
+  BEVERAGE
+  OTHER
+}
+
+enum AIPPhase {
+  ELIMINATION
+  REINTRO_1
+  REINTRO_2
+  AVOID
+}
+
+enum TyramineLevel {
+  LOW
+  MODERATE
+  HIGH
+}
+
+enum HistamineLevel {
+  LOW
+  MODERATE
+  HIGH
+}
+
+enum MealType {
+  MORNING_COFFEE
+  SMOOTHIE
+  LUNCH
+  AFTERNOON_SNACK
+  DINNER
+  EVENING_SNACK
+  EXTRA_SNACKS
+}
