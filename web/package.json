@@ -10,8 +10,7 @@
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
-    "db:seed": "npx tsx prisma/seed-aip.ts",
-    "db:seed-aip": "npx tsx prisma/seed-aip.ts"
+    "db:seed": "npx tsx prisma/seed-recipes.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
