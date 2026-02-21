@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { getUserId, isAuthError } from '@/lib/auth-helpers'
 import { startOfWeek, endOfWeek, parseISO, addDays, format } from 'date-fns'
 import type { MealType } from '@prisma/client'
 
@@ -15,6 +16,9 @@ function parseDateSafe(dateStr: string): Date {
 // GET /api/aip-diet/meals - Get AIP meals for a date or week
 export async function GET(request: NextRequest) {
   try {
+    const userId = await getUserId()
+    if (isAuthError(userId)) return userId
+
     const searchParams = request.nextUrl.searchParams
     const date = searchParams.get('date')
     const weekOf = searchParams.get('weekOf')
@@ -24,7 +28,7 @@ export async function GET(request: NextRequest) {
       const targetDate = parseDateSafe(date)
 
       let dailyLog = await prisma.aIPDailyLog.findUnique({
-        where: { date: targetDate },
+        where: { userId_date: { userId, date: targetDate } },
         include: {
           meals: {
             orderBy: { mealType: 'asc' },
@@ -52,7 +56,7 @@ export async function GET(request: NextRequest) {
       if (!dailyLog) {
         // Create empty log for the day
         dailyLog = await prisma.aIPDailyLog.create({
-          data: { date: targetDate },
+          data: { userId, date: targetDate },
           include: { meals: { include: { recipe: true } } },
         })
       }
@@ -71,6 +75,7 @@ export async function GET(request: NextRequest) {
 
       const dailyLogs = await prisma.aIPDailyLog.findMany({
         where: {
+          userId,
           date: {
             gte: weekStart,
             lte: weekEnd,
@@ -152,6 +157,9 @@ export async function GET(request: NextRequest) {
 // POST /api/aip-diet/meals - Add a meal entry
 export async function POST(request: NextRequest) {
   try {
+    const userId = await getUserId()
+    if (isAuthError(userId)) return userId
+
     const body = await request.json()
     const {
       date,
@@ -180,12 +188,12 @@ export async function POST(request: NextRequest) {
 
     // Find or create daily log
     let dailyLog = await prisma.aIPDailyLog.findUnique({
-      where: { date: mealDate },
+      where: { userId_date: { userId, date: mealDate } },
     })
 
     if (!dailyLog) {
       dailyLog = await prisma.aIPDailyLog.create({
-        data: { date: mealDate },
+        data: { userId, date: mealDate },
       })
     }
 
@@ -193,6 +201,7 @@ export async function POST(request: NextRequest) {
     const matchingRecipe = await prisma.recipe.findFirst({
       where: {
         name: { equals: mealName, mode: 'insensitive' },
+        OR: [{ userId }, { userId: null }],
       },
       select: { id: true },
     })
@@ -280,11 +289,24 @@ export async function POST(request: NextRequest) {
 // PUT /api/aip-diet/meals - Update a meal entry (tracking eaten/skipped)
 export async function PUT(request: NextRequest) {
   try {
+    const userId = await getUserId()
+    if (isAuthError(userId)) return userId
+
     const body = await request.json()
     const { entryId, ...updates } = body
 
     if (!entryId) {
       return NextResponse.json({ error: 'entryId is required' }, { status: 400 })
+    }
+
+    // Verify ownership through daily log
+    const entry = await prisma.aIPMealEntry.findUnique({
+      where: { id: entryId },
+      include: { dailyLog: { select: { userId: true } } },
+    })
+
+    if (!entry || entry.dailyLog.userId !== userId) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 })
     }
 
     const updateData: Record<string, unknown> = {}
@@ -335,11 +357,24 @@ export async function PUT(request: NextRequest) {
 // DELETE /api/aip-diet/meals - Remove a meal entry
 export async function DELETE(request: NextRequest) {
   try {
+    const userId = await getUserId()
+    if (isAuthError(userId)) return userId
+
     const searchParams = request.nextUrl.searchParams
     const entryId = searchParams.get('entryId')
 
     if (!entryId) {
       return NextResponse.json({ error: 'entryId is required' }, { status: 400 })
+    }
+
+    // Verify ownership through daily log
+    const entry = await prisma.aIPMealEntry.findUnique({
+      where: { id: entryId },
+      include: { dailyLog: { select: { userId: true } } },
+    })
+
+    if (!entry || entry.dailyLog.userId !== userId) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 })
     }
 
     await prisma.aIPMealEntry.delete({

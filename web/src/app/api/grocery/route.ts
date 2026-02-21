@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { getUserId, isAuthError } from '@/lib/auth-helpers'
 
 interface Ingredient {
   item: string
@@ -418,12 +419,15 @@ function getQualityPreferences(item: string) {
 // POST /api/grocery - Generate grocery list from meal plan
 export async function POST(request: NextRequest) {
   try {
+    const userId = await getUserId()
+    if (isAuthError(userId)) return userId
+
     const body = await request.json()
     const { mealPlanId, includeAIPPreferences = true } = body
 
-    // Get meal plan with recipes
-    const mealPlan = await prisma.mealPlan.findUnique({
-      where: { id: mealPlanId },
+    // Get meal plan with recipes (verify ownership)
+    const mealPlan = await prisma.mealPlan.findFirst({
+      where: { id: mealPlanId, userId },
       include: {
         items: {
           include: {
@@ -558,6 +562,9 @@ export async function POST(request: NextRequest) {
 // PUT /api/grocery - Toggle item checked status or update quality preferences
 export async function PUT(request: NextRequest) {
   try {
+    const userId = await getUserId()
+    if (isAuthError(userId)) return userId
+
     const body = await request.json()
     const {
       itemId,
@@ -598,6 +605,9 @@ export async function PUT(request: NextRequest) {
 // GET /api/grocery - Get grocery list for a meal plan
 export async function GET(request: NextRequest) {
   try {
+    const userId = await getUserId()
+    if (isAuthError(userId)) return userId
+
     const searchParams = request.nextUrl.searchParams
     const mealPlanId = searchParams.get('mealPlanId')
 

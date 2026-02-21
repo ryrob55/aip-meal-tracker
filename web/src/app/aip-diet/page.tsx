@@ -374,25 +374,25 @@ export default function AIPDietPage() {
             <span className={cn('text-base sm:text-lg font-bold', darkMode ? 'text-green-400' : 'text-green-600')}>
               {weekTotals.daysWithData > 0 ? Math.round(weekTotals.calories / weekTotals.daysWithData) : 0}
             </span>
-            <span className={cn('text-[10px] ml-1', darkMode ? 'text-slate-500' : 'text-slate-500')}>cal</span>
+            <span className={cn('text-xs ml-1', darkMode ? 'text-slate-500' : 'text-slate-500')}>cal</span>
           </div>
           <div className={cn('text-center px-2 py-1 rounded-lg', darkMode ? 'bg-slate-800/50' : 'bg-slate-50')}>
             <span className={cn('text-base sm:text-lg font-bold', darkMode ? 'text-blue-400' : 'text-blue-600')}>
               {weekTotals.daysWithData > 0 ? Math.round(weekTotals.protein / weekTotals.daysWithData) : 0}g
             </span>
-            <span className={cn('text-[10px] ml-1', darkMode ? 'text-slate-500' : 'text-slate-500')}>prot</span>
+            <span className={cn('text-xs ml-1', darkMode ? 'text-slate-500' : 'text-slate-500')}>prot</span>
           </div>
           <div className={cn('text-center px-2 py-1 rounded-lg', darkMode ? 'bg-slate-800/50' : 'bg-slate-50')}>
             <span className={cn('text-base sm:text-lg font-bold', darkMode ? 'text-orange-400' : 'text-orange-600')}>
               {weekTotals.daysWithData > 0 ? Math.round(weekTotals.netCarbs / weekTotals.daysWithData) : 0}g
             </span>
-            <span className={cn('text-[10px] ml-1', darkMode ? 'text-slate-500' : 'text-slate-500')}>carb</span>
+            <span className={cn('text-xs ml-1', darkMode ? 'text-slate-500' : 'text-slate-500')}>carb</span>
           </div>
           <div className={cn('text-center px-2 py-1 rounded-lg', darkMode ? 'bg-slate-800/50' : 'bg-slate-50')}>
             <span className={cn('text-base sm:text-lg font-bold', darkMode ? 'text-purple-400' : 'text-purple-600')}>
               {weekTotals.mealsTotal > 0 ? Math.round((weekTotals.mealsEaten / weekTotals.mealsTotal) * 100) : 0}%
             </span>
-            <span className={cn('text-[10px] ml-1', darkMode ? 'text-slate-500' : 'text-slate-500')}>done</span>
+            <span className={cn('text-xs ml-1', darkMode ? 'text-slate-500' : 'text-slate-500')}>done</span>
           </div>
         </div>
 
@@ -440,7 +440,7 @@ export default function AIPDietPage() {
                       : darkMode ? 'hover:bg-slate-800 text-slate-400' : 'hover:bg-slate-100 text-slate-600'
                   )}
                 >
-                  <p className="text-[10px] font-medium">{format(day, 'EEE')}</p>
+                  <p className="text-xs font-medium">{format(day, 'EEE')}</p>
                   <p className="text-sm font-bold">{format(day, 'd')}</p>
                 </button>
               )
@@ -666,7 +666,7 @@ export default function AIPDietPage() {
           )}
         >
           <Home className="w-5 h-5" />
-          <span className="text-[10px] sm:text-sm font-medium">Home</span>
+          <span className="text-xs sm:text-sm font-medium">Home</span>
         </Link>
         <Link
           href="/recipes?tag=aip"
@@ -678,7 +678,7 @@ export default function AIPDietPage() {
           )}
         >
           <ChefHat className="w-5 h-5" />
-          <span className="text-[10px] sm:text-sm font-medium">Recipes</span>
+          <span className="text-xs sm:text-sm font-medium">Recipes</span>
         </Link>
         <Link
           href="/aip-diet/foods"
@@ -690,7 +690,7 @@ export default function AIPDietPage() {
           )}
         >
           <Database className="w-5 h-5" />
-          <span className="text-[10px] sm:text-sm font-medium">Foods</span>
+          <span className="text-xs sm:text-sm font-medium">Foods</span>
         </Link>
         <Link
           href="/aip-diet/report"
@@ -702,7 +702,7 @@ export default function AIPDietPage() {
           )}
         >
           <BarChart3 className="w-5 h-5" />
-          <span className="text-[10px] sm:text-sm font-medium">Report</span>
+          <span className="text-xs sm:text-sm font-medium">Report</span>
         </Link>
       </div>
 

@@ -44,8 +44,12 @@ export const CATEGORY_ORDER: AIPFoodCategory[] = [
 // AIP Phase display
 export const PHASE_LABELS: Record<AIPPhase, string> = {
   ELIMINATION: 'Elimination (Safe)',
-  REINTRO_1: 'Reintro Phase 1',
-  REINTRO_2: 'Reintro Phase 2',
+  REINTRO_1: 'Reintro Stage 1',
+  REINTRO_2: 'Reintro Stage 2',
+  REINTRO_3: 'Reintro Stage 3',
+  REINTRO_4: 'Reintro Stage 4',
+  PERSONAL_AVOID: 'Personal Avoid',
+  SAFE: 'Safe (Reintroduced)',
   AVOID: 'Avoid',
 }
 
@@ -53,6 +57,10 @@ export const PHASE_COLORS: Record<AIPPhase, string> = {
   ELIMINATION: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
   REINTRO_1: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
   REINTRO_2: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
+  REINTRO_3: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
+  REINTRO_4: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+  PERSONAL_AVOID: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+  SAFE: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200',
   AVOID: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
 }
 

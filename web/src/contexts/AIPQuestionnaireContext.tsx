@@ -1,16 +1,20 @@
 'use client'
 
-import { createContext, useContext, useState, useCallback, ReactNode } from 'react'
+import { createContext, useContext, useState, useCallback, useMemo, ReactNode } from 'react'
 import type { AIPRestrictionType, AIPSeverity } from '@prisma/client'
 
 // Questionnaire step types
 export type QuestionnaireStep =
   | 'welcome'
+  | 'aip_explainer'
+  | 'variant'
+  | 'experience'
   | 'restrictions'
   | 'goals'
   | 'macros'
   | 'fasting'
   | 'preferences'
+  | 'ai_setup'
   | 'review'
 
 // Restriction data structure for the wizard
@@ -24,6 +28,12 @@ export interface RestrictionInput {
 // Full questionnaire data
 export interface QuestionnaireData {
   name?: string
+
+  // AIP Variant & Experience (Phase 2)
+  aipVariant: 'STANDARD' | 'MODIFIED_2024'
+  experienceLevel: 'BEGINNER' | 'SOME_KNOWLEDGE' | 'EXPERIENCED'
+  diagnosisInfo: string
+  doctorRecommended: boolean
 
   // Macro Targets
   dailyCalories: number
@@ -54,13 +64,23 @@ export interface QuestionnaireData {
 
   // Restrictions
   restrictions: RestrictionInput[]
+
+  // AI Setup (Phase 2 - BYOK)
+  aiProvider: string
+  llmBaseUrl: string
+  llmApiKey: string
+  llmModel: string
 }
 
-// Default values matching the user's AIP plan
+// Default values
 const defaultData: QuestionnaireData = {
-  dailyCalories: 2600,
-  dailyProtein: 150,
-  dailyNetCarbs: 80,
+  aipVariant: 'STANDARD',
+  experienceLevel: 'BEGINNER',
+  diagnosisInfo: '',
+  doctorRecommended: false,
+  dailyCalories: 2000,
+  dailyProtein: 100,
+  dailyNetCarbs: 100,
   eatingWindowStart: '11:30',
   eatingWindowEnd: '18:30',
   includeSmoothie: true,
@@ -74,6 +94,10 @@ const defaultData: QuestionnaireData = {
   allowLeftovers: true,
   maxLeftoverHours: 24,
   restrictions: [],
+  aiProvider: '',
+  llmBaseUrl: '',
+  llmApiKey: '',
+  llmModel: '',
 }
 
 // Available health goals
@@ -123,10 +147,58 @@ export const TYRAMINE_RESTRICTIONS = [
   { foodName: 'Red Wine', description: 'High tyramine content' },
 ]
 
+// Default step order (legacy wizard)
+const LEGACY_STEP_ORDER: QuestionnaireStep[] = [
+  'welcome',
+  'restrictions',
+  'goals',
+  'macros',
+  'fasting',
+  'preferences',
+  'review',
+]
+
+// New onboarding step order (Phase 2)
+export const ONBOARDING_STEP_ORDER: QuestionnaireStep[] = [
+  'welcome',
+  'aip_explainer',
+  'variant',
+  'experience',
+  'restrictions',
+  'macros',
+  'fasting',
+  'ai_setup',
+  'review',
+]
+
+// Streamlined first-time onboarding (6 steps, TurboTax-style)
+export const STREAMLINED_STEPS: QuestionnaireStep[] = [
+  'welcome',
+  'experience',
+  'variant',
+  'restrictions',
+  'macros',
+  'review',
+]
+
+// Get step order based on experience level (experienced users skip explainer)
+export function getOnboardingSteps(experienceLevel: string): QuestionnaireStep[] {
+  if (experienceLevel === 'EXPERIENCED') {
+    return ONBOARDING_STEP_ORDER.filter((s) => s !== 'aip_explainer')
+  }
+  return ONBOARDING_STEP_ORDER
+}
+
 interface AIPQuestionnaireContextType {
   // Current step
   currentStep: QuestionnaireStep
   setCurrentStep: (step: QuestionnaireStep) => void
+
+  // Step order
+  stepOrder: QuestionnaireStep[]
+
+  // Transition direction for animations
+  transitionDirection: 'forward' | 'back'
 
   // Questionnaire data
   data: QuestionnaireData
@@ -153,36 +225,44 @@ interface AIPQuestionnaireContextType {
 
 const AIPQuestionnaireContext = createContext<AIPQuestionnaireContextType | null>(null)
 
-const STEP_ORDER: QuestionnaireStep[] = [
-  'welcome',
-  'restrictions',
-  'goals',
-  'macros',
-  'fasting',
-  'preferences',
-  'review',
-]
-
 interface Props {
   children: ReactNode
   initialData?: Partial<QuestionnaireData>
   initialStep?: QuestionnaireStep
   questionnaireId?: string
+  stepOrder?: QuestionnaireStep[]
 }
 
 export function AIPQuestionnaireProvider({
   children,
   initialData,
-  initialStep = 'welcome',
+  initialStep,
   questionnaireId,
+  stepOrder: customStepOrder,
 }: Props) {
-  const [currentStep, setCurrentStep] = useState<QuestionnaireStep>(initialStep)
   const [data, setData] = useState<QuestionnaireData>({
     ...defaultData,
     ...initialData,
   })
+
+  // Compute dynamic step order based on experience level
+  const stepOrder = useMemo(() => {
+    if (customStepOrder) {
+      // For new onboarding wizard, filter based on experience
+      if (data.experienceLevel === 'EXPERIENCED') {
+        return customStepOrder.filter((s) => s !== 'aip_explainer')
+      }
+      return customStepOrder
+    }
+    return LEGACY_STEP_ORDER
+  }, [customStepOrder, data.experienceLevel])
+
+  const [currentStep, setCurrentStep] = useState<QuestionnaireStep>(
+    initialStep || stepOrder[0]
+  )
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [existingId, setExistingId] = useState<string | undefined>(questionnaireId)
+  const [transitionDirection, setTransitionDirection] = useState<'forward' | 'back'>('forward')
 
   const updateData = useCallback((updates: Partial<QuestionnaireData>) => {
     setData((prev) => ({ ...prev, ...updates }))
@@ -190,8 +270,8 @@ export function AIPQuestionnaireProvider({
 
   const resetData = useCallback(() => {
     setData(defaultData)
-    setCurrentStep('welcome')
-  }, [])
+    setCurrentStep(stepOrder[0])
+  }, [stepOrder])
 
   const addRestriction = useCallback((restriction: RestrictionInput) => {
     setData((prev) => ({
@@ -222,21 +302,44 @@ export function AIPQuestionnaireProvider({
     []
   )
 
-  const currentIndex = STEP_ORDER.indexOf(currentStep)
-  const canGoNext = currentIndex < STEP_ORDER.length - 1
+  const currentIndex = stepOrder.indexOf(currentStep)
+  const canGoNext = currentIndex < stepOrder.length - 1
   const canGoPrev = currentIndex > 0
 
   const goNext = useCallback(() => {
-    if (canGoNext) {
-      setCurrentStep(STEP_ORDER[currentIndex + 1])
+    const idx = stepOrder.indexOf(currentStep)
+    if (idx < stepOrder.length - 1) {
+      const nextStep = stepOrder[idx + 1]
+
+      // Pre-populate standard AIP restrictions when arriving at restrictions step
+      if (nextStep === 'restrictions') {
+        setData((prev) => {
+          if (prev.aipVariant === 'STANDARD' && prev.restrictions.length === 0) {
+            return {
+              ...prev,
+              restrictions: COMMON_RESTRICTIONS.map((r) => ({
+                foodName: r.foodName,
+                restrictionType: 'AVOID' as AIPRestrictionType,
+                severity: 'SEVERE' as AIPSeverity,
+              })),
+            }
+          }
+          return prev
+        })
+      }
+
+      setTransitionDirection('forward')
+      setCurrentStep(nextStep)
     }
-  }, [currentIndex, canGoNext])
+  }, [currentStep, stepOrder])
 
   const goPrev = useCallback(() => {
-    if (canGoPrev) {
-      setCurrentStep(STEP_ORDER[currentIndex - 1])
+    const idx = stepOrder.indexOf(currentStep)
+    if (idx > 0) {
+      setTransitionDirection('back')
+      setCurrentStep(stepOrder[idx - 1])
     }
-  }, [currentIndex, canGoPrev])
+  }, [currentStep, stepOrder])
 
   const submitQuestionnaire = useCallback(async () => {
     setIsSubmitting(true)
@@ -268,6 +371,8 @@ export function AIPQuestionnaireProvider({
       value={{
         currentStep,
         setCurrentStep,
+        stepOrder,
+        transitionDirection,
         data,
         updateData,
         resetData,
@@ -298,7 +403,7 @@ export function useAIPQuestionnaire() {
 }
 
 export function useQuestionnaireStep() {
-  const { currentStep, goNext, goPrev, canGoNext, canGoPrev, setCurrentStep } =
+  const { currentStep, goNext, goPrev, canGoNext, canGoPrev, setCurrentStep, stepOrder, transitionDirection } =
     useAIPQuestionnaire()
-  return { currentStep, goNext, goPrev, canGoNext, canGoPrev, setCurrentStep }
+  return { currentStep, goNext, goPrev, canGoNext, canGoPrev, setCurrentStep, stepOrder, transitionDirection }
 }

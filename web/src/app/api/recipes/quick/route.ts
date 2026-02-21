@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { getUserId, isAuthError } from '@/lib/auth-helpers'
 import { generateRecipeDetails } from '@/lib/llm'
 
 // POST /api/recipes/quick - Quick create a placeholder recipe
 // Optionally generates details using local LLM
 export async function POST(request: NextRequest) {
   try {
+    const userId = await getUserId()
+    if (isAuthError(userId)) return userId
+
     const body = await request.json()
     const { name, generateDetails = false } = body as {
       name: string
@@ -19,9 +23,12 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if recipe already exists
+    // Check if recipe already exists for this user
     const existing = await prisma.recipe.findFirst({
-      where: { name: { equals: name, mode: 'insensitive' } },
+      where: {
+        name: { equals: name, mode: 'insensitive' },
+        OR: [{ userId }, { userId: null }],
+      },
     })
 
     if (existing) {
@@ -43,7 +50,10 @@ export async function POST(request: NextRequest) {
     if (generateDetails) {
       // Get sample recipes for style reference
       const sampleRecipes = await prisma.recipe.findMany({
-        where: { isDraft: false },
+        where: {
+          isDraft: false,
+          OR: [{ userId }, { userId: null }],
+        },
         select: { name: true, ingredients: true, tags: true },
         take: 10,
       })
@@ -68,7 +78,10 @@ export async function POST(request: NextRequest) {
     }
 
     const recipe = await prisma.recipe.create({
-      data: recipeData,
+      data: {
+        userId,
+        ...recipeData,
+      },
     })
 
     return NextResponse.json(recipe, { status: 201 })

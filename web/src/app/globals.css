@@ -61,3 +61,123 @@ html, body {
 .overscroll-y-contain {
   overscroll-behavior-y: contain;
 }
+
+/* Onboarding slide animations */
+@keyframes onboarding-slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes onboarding-slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.onboarding-slide-forward {
+  animation: onboarding-slide-in-right 0.3s ease-out;
+}
+
+.onboarding-slide-back {
+  animation: onboarding-slide-in-left 0.3s ease-out;
+}
+
+/* Celebration animations */
+@keyframes celebration-check {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes celebration-ring {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+.celebration-check {
+  animation: celebration-check 0.6s ease-out 0.2s both;
+}
+
+.celebration-ring {
+  animation: celebration-ring 1s ease-out 0.3s both;
+}
+
+/* Welcome screen entrance animations */
+@keyframes welcome-icon-enter {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes welcome-text-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.welcome-icon-enter {
+  animation: welcome-icon-enter 0.4s ease-out 0.1s both;
+}
+
+.welcome-text-enter-1 {
+  animation: welcome-text-enter 0.4s ease-out 0.25s both;
+}
+
+.welcome-text-enter-2 {
+  animation: welcome-text-enter 0.4s ease-out 0.35s both;
+}
+
+.welcome-text-enter-3 {
+  animation: welcome-text-enter 0.4s ease-out 0.45s both;
+}
+
+/* Card depth — subtle inset highlight (dark mode) */
+.card-glow {
+  box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.03), 0 0 0 1px rgba(255,255,255,0.03);
+}
+
+/* Light mode card elevation */
+.card-elevated-light {
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.04);
+}
+
+/* Colored progress bar glows */
+.progress-glow-emerald { box-shadow: 0 0 8px rgba(16,185,129,0.4); }
+.progress-glow-sky { box-shadow: 0 0 8px rgba(56,189,248,0.3); }
+.progress-glow-amber { box-shadow: 0 0 8px rgba(245,158,11,0.3); }

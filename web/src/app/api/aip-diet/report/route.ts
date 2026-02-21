@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { getUserId, isAuthError } from '@/lib/auth-helpers'
 import { startOfWeek, endOfWeek, subWeeks, addWeeks, format, eachDayOfInterval, isAfter } from 'date-fns'
 
 interface MealSummary {
@@ -52,6 +53,9 @@ interface WeeklySummary {
 // GET /api/aip-diet/report - Generate progress report
 export async function GET(request: NextRequest) {
   try {
+    const userId = await getUserId()
+    if (isAuthError(userId)) return userId
+
     const searchParams = request.nextUrl.searchParams
     const weeksBack = searchParams.get('weeks') ? parseInt(searchParams.get('weeks')!, 10) : null
     // Append T12:00:00 to avoid timezone day-shift (midnight UTC = previous day in US timezones)
@@ -59,11 +63,9 @@ export async function GET(request: NextRequest) {
     const startDateParam = searchParams.get('startDate') ? new Date(searchParams.get('startDate')! + 'T12:00:00') : null
 
     // Get questionnaire with restrictions for protocol info
-    const questionnaire = await prisma.aIPQuestionnaire.findFirst({
-      orderBy: { createdAt: 'desc' },
-      include: {
-        restrictions: true,
-      },
+    const questionnaire = await prisma.aIPQuestionnaire.findUnique({
+      where: { userId },
+      include: { restrictions: true },
     })
 
     if (!questionnaire) {
@@ -92,6 +94,7 @@ export async function GET(request: NextRequest) {
     // Get all AIP daily logs with recipe join (fixes zero-macro bug)
     const dailyLogs = await prisma.aIPDailyLog.findMany({
       where: {
+        userId,
         date: {
           gte: queryStart,
           lte: queryEnd,
@@ -147,7 +150,6 @@ export async function GET(request: NextRequest) {
       for (const day of daysInWeek) {
         const dayStr = format(day, 'yyyy-MM-dd')
         const dayLog = dailyLogs.find(
-          // Use toISOString (UTC) to avoid local-timezone day shift on Prisma's midnight-UTC dates
           (log) => new Date(log.date).toISOString().slice(0, 10) === dayStr
         )
         const dayItems = dayLog?.meals || []

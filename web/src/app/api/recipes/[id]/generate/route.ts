@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { getUserId, isAuthError } from '@/lib/auth-helpers'
 import { generateRecipeDetails } from '@/lib/llm'
 
 // POST /api/recipes/[id]/generate - Generate AI content for an existing recipe
@@ -8,11 +9,17 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const userId = await getUserId()
+    if (isAuthError(userId)) return userId
+
     const { id } = await params
 
-    // Get the recipe
-    const recipe = await prisma.recipe.findUnique({
-      where: { id },
+    // Get the recipe (verify ownership)
+    const recipe = await prisma.recipe.findFirst({
+      where: {
+        id,
+        OR: [{ userId }, { userId: null }],
+      },
     })
 
     if (!recipe) {
@@ -24,7 +31,10 @@ export async function POST(
 
     // Get sample recipes for style reference
     const sampleRecipes = await prisma.recipe.findMany({
-      where: { isDraft: false },
+      where: {
+        isDraft: false,
+        OR: [{ userId }, { userId: null }],
+      },
       select: { name: true, ingredients: true, tags: true },
       take: 10,
     })

@@ -1,18 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { getUserId, isAuthError } from '@/lib/auth-helpers'
 import { suggestMeals } from '@/lib/llm'
 import { startOfWeek, subWeeks, addDays } from 'date-fns'
 
 export async function POST(request: NextRequest) {
   try {
+    const userId = await getUserId()
+    if (isAuthError(userId)) return userId
+
     const body = await request.json().catch(() => ({}))
     const { constraints } = body as {
       weekOf?: string
       constraints?: string[]
     }
 
-    // Get all recipes
+    // Get all recipes for this user
     const recipes = await prisma.recipe.findMany({
+      where: { OR: [{ userId }, { userId: null }] },
       select: { name: true },
     })
     const availableRecipes = recipes.map((r) => r.name)
@@ -29,6 +34,7 @@ export async function POST(request: NextRequest) {
     const recentMealItems = await prisma.mealPlanItem.findMany({
       where: {
         date: { gte: twoWeeksAgo },
+        mealPlan: { userId },
       },
       include: {
         recipe: {
@@ -82,6 +88,9 @@ export async function POST(request: NextRequest) {
 // Apply suggestions to the meal plan
 export async function PUT(request: NextRequest) {
   try {
+    const userId = await getUserId()
+    if (isAuthError(userId)) return userId
+
     const body = await request.json()
     const { weekOf, suggestions } = body as {
       weekOf: string
@@ -99,12 +108,12 @@ export async function PUT(request: NextRequest) {
 
     // Find or create a meal plan for this week
     let mealPlan = await prisma.mealPlan.findFirst({
-      where: { weekStartDate: weekStart },
+      where: { userId, weekStartDate: weekStart },
     })
 
     if (!mealPlan) {
       mealPlan = await prisma.mealPlan.create({
-        data: { weekStartDate: weekStart },
+        data: { userId, weekStartDate: weekStart },
       })
     }
 
@@ -112,6 +121,7 @@ export async function PUT(request: NextRequest) {
     const recipes = await prisma.recipe.findMany({
       where: {
         name: { in: suggestions },
+        OR: [{ userId }, { userId: null }],
       },
       select: { id: true, name: true },
     })

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { getUserId, isAuthError } from '@/lib/auth-helpers'
 
 // GET /api/recipes/[id] - Get a single recipe
 export async function GET(
@@ -7,8 +8,14 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const recipe = await prisma.recipe.findUnique({
-      where: { id: params.id },
+    const userId = await getUserId()
+    if (isAuthError(userId)) return userId
+
+    const recipe = await prisma.recipe.findFirst({
+      where: {
+        id: params.id,
+        OR: [{ userId }, { userId: null }],
+      },
     })
 
     if (!recipe) {
@@ -34,6 +41,20 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
+    const userId = await getUserId()
+    if (isAuthError(userId)) return userId
+
+    // Verify ownership (allow editing own recipes and legacy ones)
+    const existing = await prisma.recipe.findFirst({
+      where: {
+        id: params.id,
+        OR: [{ userId }, { userId: null }],
+      },
+    })
+    if (!existing) {
+      return NextResponse.json({ error: 'Recipe not found' }, { status: 404 })
+    }
+
     const body = await request.json()
 
     const recipe = await prisma.recipe.update({
@@ -74,6 +95,20 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    const userId = await getUserId()
+    if (isAuthError(userId)) return userId
+
+    // Verify ownership
+    const existing = await prisma.recipe.findFirst({
+      where: {
+        id: params.id,
+        OR: [{ userId }, { userId: null }],
+      },
+    })
+    if (!existing) {
+      return NextResponse.json({ error: 'Recipe not found' }, { status: 404 })
+    }
+
     await prisma.recipe.delete({
       where: { id: params.id },
     })

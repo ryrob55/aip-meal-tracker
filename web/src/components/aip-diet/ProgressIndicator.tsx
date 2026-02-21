@@ -3,23 +3,45 @@
 import { cn } from '@/lib/utils'
 import type { QuestionnaireStep } from '@/contexts/AIPQuestionnaireContext'
 
+// Default step labels
+const DEFAULT_STEP_LABELS: Record<QuestionnaireStep, string> = {
+  welcome: 'Start',
+  aip_explainer: 'About AIP',
+  variant: 'Protocol',
+  experience: 'Experience',
+  restrictions: 'Restrictions',
+  goals: 'Goals',
+  macros: 'Macros',
+  fasting: 'Fasting',
+  preferences: 'Preferences',
+  ai_setup: 'AI Setup',
+  review: 'Review',
+}
+
 interface Props {
   currentStep: QuestionnaireStep
   darkMode?: boolean
+  steps?: { step: QuestionnaireStep; label: string }[]
+  stepOrder?: QuestionnaireStep[]
 }
 
-const STEPS: { step: QuestionnaireStep; label: string }[] = [
-  { step: 'welcome', label: 'Start' },
-  { step: 'restrictions', label: 'Restrictions' },
-  { step: 'goals', label: 'Goals' },
-  { step: 'macros', label: 'Macros' },
-  { step: 'fasting', label: 'Fasting' },
-  { step: 'preferences', label: 'Preferences' },
-  { step: 'review', label: 'Review' },
-]
+export function ProgressIndicator({ currentStep, darkMode = true, steps, stepOrder }: Props) {
+  // Build steps list from either explicit steps, stepOrder, or fallback
+  const resolvedSteps = steps
+    ? steps
+    : stepOrder
+    ? stepOrder.map((s) => ({ step: s, label: DEFAULT_STEP_LABELS[s] || s }))
+    : [
+        { step: 'welcome' as const, label: 'Start' },
+        { step: 'restrictions' as const, label: 'Restrictions' },
+        { step: 'goals' as const, label: 'Goals' },
+        { step: 'macros' as const, label: 'Macros' },
+        { step: 'fasting' as const, label: 'Fasting' },
+        { step: 'preferences' as const, label: 'Preferences' },
+        { step: 'review' as const, label: 'Review' },
+      ]
 
-export function ProgressIndicator({ currentStep, darkMode = true }: Props) {
-  const currentIndex = STEPS.findIndex((s) => s.step === currentStep)
+  const currentIndex = resolvedSteps.findIndex((s) => s.step === currentStep)
 
   return (
     <div className="w-full">
@@ -33,7 +55,7 @@ export function ProgressIndicator({ currentStep, darkMode = true }: Props) {
         >
           <div
             className="h-1 rounded-full bg-green-500 transition-all duration-300"
-            style={{ width: `${((currentIndex + 1) / STEPS.length) * 100}%` }}
+            style={{ width: `${((currentIndex + 1) / resolvedSteps.length) * 100}%` }}
           />
         </div>
       </div>
@@ -46,12 +68,12 @@ export function ProgressIndicator({ currentStep, darkMode = true }: Props) {
             darkMode ? 'text-slate-300' : 'text-slate-600'
           )}
         >
-          Step {currentIndex + 1} of {STEPS.length}: {STEPS[currentIndex].label}
+          Step {currentIndex + 1} of {resolvedSteps.length}: {resolvedSteps[currentIndex]?.label}
         </p>
       </div>
 
       <div className="hidden sm:flex justify-between mt-3">
-        {STEPS.map((step, index) => {
+        {resolvedSteps.map((step, index) => {
           const isCompleted = index < currentIndex
           const isCurrent = index === currentIndex
 

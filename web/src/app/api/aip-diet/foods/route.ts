@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { getUserId, isAuthError } from '@/lib/auth-helpers'
 import type { AIPFoodCategory, AIPPhase, TyramineLevel, HistamineLevel } from '@prisma/client'
 
 // GET - Fetch AIP foods with optional filtering
 export async function GET(request: NextRequest) {
   try {
+    const userId = await getUserId()
+    if (isAuthError(userId)) return userId
+
     const { searchParams } = new URL(request.url)
 
     // Parse filter parameters
@@ -81,6 +85,9 @@ export async function GET(request: NextRequest) {
 // POST - Create a new AIP food (for admin use)
 export async function POST(request: NextRequest) {
   try {
+    const userId = await getUserId()
+    if (isAuthError(userId)) return userId
+
     const body = await request.json()
 
     // Calculate net carbs
@@ -119,6 +126,9 @@ export async function POST(request: NextRequest) {
 // PUT - Update an AIP food
 export async function PUT(request: NextRequest) {
   try {
+    const userId = await getUserId()
+    if (isAuthError(userId)) return userId
+
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
 
@@ -155,6 +165,9 @@ export async function PUT(request: NextRequest) {
 // DELETE - Remove an AIP food
 export async function DELETE(request: NextRequest) {
   try {
+    const userId = await getUserId()
+    if (isAuthError(userId)) return userId
+
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
 

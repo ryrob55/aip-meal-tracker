@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_DB: aip
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-aip_password}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fcc_password}
       TZ: America/New_York
     volumes:
       - aip-postgres-data:/var/lib/postgresql/data
@@ -26,17 +26,25 @@ services:
       - "postgres:127.0.0.1"
     environment:
       TZ: America/New_York
-      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-aip_password}@localhost:5433/aip
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-fcc_password}@localhost:5433/aip
+      # Auth
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3004}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-change-me-in-production}
+      SINGLE_USER_MODE: ${SINGLE_USER_MODE:-true}
+      # OAuth (optional)
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      # LLM (optional, used in single-user mode or as fallback)
       LLM_BASE_URL: ${LLM_BASE_URL:-}
       LLM_API_KEY: ${LLM_API_KEY:-}
       LLM_MODEL: ${LLM_MODEL:-}
-      PORT: 3002
+      PORT: 3004
     depends_on:
       postgres:
         condition: service_healthy
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "node -e \"require('http').get('http://localhost:3002', (r) => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))\""]
+      test: ["CMD-SHELL", "node -e \"require('http').get('http://localhost:3004', (r) => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))\""]
       interval: 30s
       timeout: 10s
       retries: 3

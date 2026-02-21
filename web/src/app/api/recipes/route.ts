@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { getUserId, isAuthError } from '@/lib/auth-helpers'
 
-// GET /api/recipes - List all recipes
+// GET /api/recipes - List recipes for current user
 export async function GET(request: NextRequest) {
   try {
+    const userId = await getUserId()
+    if (isAuthError(userId)) return userId
+
     const searchParams = request.nextUrl.searchParams
     const search = searchParams.get('search')
     const tag = searchParams.get('tag')
@@ -11,6 +15,8 @@ export async function GET(request: NextRequest) {
     const recipes = await prisma.recipe.findMany({
       where: {
         AND: [
+          // Show user's recipes and legacy recipes (no userId)
+          { OR: [{ userId }, { userId: null }] },
           search
             ? {
                 OR: [
@@ -60,10 +66,14 @@ export async function GET(request: NextRequest) {
 // POST /api/recipes - Create a new recipe
 export async function POST(request: NextRequest) {
   try {
+    const userId = await getUserId()
+    if (isAuthError(userId)) return userId
+
     const body = await request.json()
 
     const recipe = await prisma.recipe.create({
       data: {
+        userId,
         name: body.name,
         ingredients: body.ingredients || [],
         instructions: body.instructions || '',

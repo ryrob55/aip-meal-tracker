@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { getUserId, isAuthError } from '@/lib/auth-helpers'
 import { startOfWeek, parseISO } from 'date-fns'
 
 // Helper to parse date string without timezone issues
@@ -14,6 +15,9 @@ function parseDateSafe(dateStr: string): Date {
 // GET /api/meals - Get meal plan for a week
 export async function GET(request: NextRequest) {
   try {
+    const userId = await getUserId()
+    if (isAuthError(userId)) return userId
+
     const searchParams = request.nextUrl.searchParams
     const weekOf = searchParams.get('weekOf')
 
@@ -23,6 +27,7 @@ export async function GET(request: NextRequest) {
     // Find or create meal plan for this week
     let mealPlan = await prisma.mealPlan.findFirst({
       where: {
+        userId,
         weekStartDate: weekStart,
       },
       include: {
@@ -45,6 +50,7 @@ export async function GET(request: NextRequest) {
     if (!mealPlan) {
       mealPlan = await prisma.mealPlan.create({
         data: {
+          userId,
           weekStartDate: weekStart,
           status: 'DRAFT',
         },
@@ -76,6 +82,9 @@ export async function GET(request: NextRequest) {
 // POST /api/meals - Add a meal to the plan
 export async function POST(request: NextRequest) {
   try {
+    const userId = await getUserId()
+    if (isAuthError(userId)) return userId
+
     const body = await request.json()
     const { mealPlanId: providedMealPlanId, recipeId, date, notes, servings = 1 } = body
 
@@ -93,11 +102,12 @@ export async function POST(request: NextRequest) {
     let mealPlanId = providedMealPlanId
     if (!mealPlanId) {
       let mealPlan = await prisma.mealPlan.findFirst({
-        where: { weekStartDate: weekStart },
+        where: { userId, weekStartDate: weekStart },
       })
       if (!mealPlan) {
         mealPlan = await prisma.mealPlan.create({
           data: {
+            userId,
             weekStartDate: weekStart,
             status: 'DRAFT',
           },
@@ -157,8 +167,19 @@ export async function POST(request: NextRequest) {
 // PUT /api/meals - Update meal plan status (confirm)
 export async function PUT(request: NextRequest) {
   try {
+    const userId = await getUserId()
+    if (isAuthError(userId)) return userId
+
     const body = await request.json()
     const { mealPlanId, status } = body
+
+    // Verify ownership
+    const existing = await prisma.mealPlan.findFirst({
+      where: { id: mealPlanId, userId },
+    })
+    if (!existing) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    }
 
     const mealPlan = await prisma.mealPlan.update({
       where: { id: mealPlanId },
@@ -185,6 +206,9 @@ export async function PUT(request: NextRequest) {
 // PATCH /api/meals - Update a meal plan item (servings, notes)
 export async function PATCH(request: NextRequest) {
   try {
+    const userId = await getUserId()
+    if (isAuthError(userId)) return userId
+
     const body = await request.json()
     const { itemId, servings, notes } = body
 
@@ -193,6 +217,15 @@ export async function PATCH(request: NextRequest) {
         { error: 'Item ID required' },
         { status: 400 }
       )
+    }
+
+    // Verify ownership through meal plan
+    const item = await prisma.mealPlanItem.findUnique({
+      where: { id: itemId },
+      include: { mealPlan: { select: { userId: true } } },
+    })
+    if (!item || item.mealPlan.userId !== userId) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 })
     }
 
     const updateData: { servings?: number; notes?: string } = {}
@@ -220,6 +253,9 @@ export async function PATCH(request: NextRequest) {
 // DELETE /api/meals - Remove a meal from the plan
 export async function DELETE(request: NextRequest) {
   try {
+    const userId = await getUserId()
+    if (isAuthError(userId)) return userId
+
     const searchParams = request.nextUrl.searchParams
     const itemId = searchParams.get('itemId')
 
@@ -228,6 +264,15 @@ export async function DELETE(request: NextRequest) {
         { error: 'Item ID required' },
         { status: 400 }
       )
+    }
+
+    // Verify ownership through meal plan
+    const item = await prisma.mealPlanItem.findUnique({
+      where: { id: itemId },
+      include: { mealPlan: { select: { userId: true } } },
+    })
+    if (!item || item.mealPlan.userId !== userId) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 })
     }
 
     await prisma.mealPlanItem.delete({
