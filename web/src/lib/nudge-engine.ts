@@ -17,6 +17,7 @@ interface NudgeContext {
   completedReintroTests: number
   streakDays: number // out of last 7
   topCorrelationFood?: { food: string; delta: number; symptom: string }
+  macroAdherenceRate?: number
 }
 
 /**
@@ -83,6 +84,16 @@ export function generateNudges(ctx: NudgeContext): Nudge[] {
       message: "After 30+ days on elimination, you can start testing foods one at a time.",
       actionLabel: 'Start a test',
       actionHref: '/reintro/new',
+    })
+  }
+
+  // Macro adherence warning
+  if (ctx.macroAdherenceRate !== undefined && ctx.macroAdherenceRate < 40) {
+    nudges.push({
+      id: 'macro-low',
+      type: 'warning',
+      title: 'Macro targets need attention',
+      message: `You're hitting your calorie/protein targets ${ctx.macroAdherenceRate}% of days. Try adding a protein-rich snack.`,
     })
   }
 
