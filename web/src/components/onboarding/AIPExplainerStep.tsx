@@ -142,7 +142,7 @@ export function AIPExplainerStep({ darkMode = true }: Props) {
                   darkMode ? 'text-green-300' : 'text-green-700'
                 )}
               >
-                <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-3 h-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 {food}

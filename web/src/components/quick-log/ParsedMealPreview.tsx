@@ -70,7 +70,7 @@ export function ParsedMealPreview({
             <div className="flex items-start justify-between">
               <span className="text-sm font-medium">{meal.name}</span>
               {!meal.aipCompliant && (
-                <span className="text-[10px] px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-400">
+                <span className="text-[10px] px-1.5 py-0.5 rounded-sm bg-orange-500/20 text-orange-400">
                   Not AIP
                 </span>
               )}

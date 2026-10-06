@@ -264,7 +264,7 @@ export default function FoodsPage() {
                           </div>
                           <span
                             className={cn(
-                              'px-2 py-0.5 rounded text-xs font-medium',
+                              'px-2 py-0.5 rounded-sm text-xs font-medium',
                               PHASE_COLORS[food.aipPhase]
                             )}
                           >
@@ -305,7 +305,7 @@ export default function FoodsPage() {
                               <span
                                 key={badge.label}
                                 className={cn(
-                                  'px-2 py-0.5 rounded text-xs',
+                                  'px-2 py-0.5 rounded-sm text-xs',
                                   badge.color
                                 )}
                               >

@@ -74,7 +74,7 @@ function SymptomComparisonBar({
               <div key={row.label} className="flex items-center gap-2">
                 <span
                   className={cn(
-                    'text-[10px] w-12 text-right flex-shrink-0',
+                    'text-[10px] w-12 text-right shrink-0',
                     darkMode ? 'text-slate-500' : 'text-slate-400'
                   )}
                 >
@@ -93,7 +93,7 @@ function SymptomComparisonBar({
                 </div>
                 <span
                   className={cn(
-                    'text-[10px] w-4 flex-shrink-0',
+                    'text-[10px] w-4 shrink-0',
                     darkMode ? 'text-slate-500' : 'text-slate-400'
                   )}
                 >

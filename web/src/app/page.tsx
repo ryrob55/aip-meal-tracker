@@ -215,7 +215,7 @@ export default function DashboardPage() {
                 )}
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center shrink-0">
                     <Utensils className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex-1">
@@ -247,7 +247,7 @@ export default function DashboardPage() {
                 <div className="flex items-start gap-4">
                   <div
                     className={cn(
-                      'w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0',
+                      'w-10 h-10 rounded-full flex items-center justify-center shrink-0',
                       data.symptomsLoggedToday
                         ? 'bg-emerald-500'
                         : darkMode ? 'bg-zinc-800' : 'bg-zinc-100'
@@ -290,7 +290,7 @@ export default function DashboardPage() {
                 <div className="flex items-start gap-4">
                   <div
                     className={cn(
-                      'w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0',
+                      'w-10 h-10 rounded-full flex items-center justify-center shrink-0',
                       darkMode ? 'bg-zinc-800' : 'bg-zinc-100'
                     )}
                   >
@@ -443,7 +443,7 @@ export default function DashboardPage() {
                   )}
                 >
                   <div
-                    className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 progress-glow-emerald animate-progress-fill"
+                    className="h-full rounded-full bg-linear-to-r from-emerald-500 to-emerald-400 progress-glow-emerald animate-progress-fill"
                     style={{
                       '--progress-width': `${Math.min(100, data.macroProgress.target.calories ? (data.macroProgress.calories / data.macroProgress.target.calories) * 100 : 0)}%`,
                     } as React.CSSProperties}
@@ -526,7 +526,7 @@ export default function DashboardPage() {
                 className={cn(
                   'p-4 rounded-2xl mb-4 ring-1 transition-all active:scale-[0.98]',
                   darkMode
-                    ? 'bg-emerald-500/[0.08] ring-emerald-500/20'
+                    ? 'bg-emerald-500/8 ring-emerald-500/20'
                     : 'bg-emerald-50 ring-emerald-200'
                 )}
               >
@@ -568,7 +568,7 @@ export default function DashboardPage() {
                 className={cn(
                   'p-4 rounded-2xl mb-4 ring-1 transition-all active:scale-[0.98]',
                   darkMode
-                    ? 'bg-violet-500/[0.08] ring-violet-500/20'
+                    ? 'bg-violet-500/8 ring-violet-500/20'
                     : 'bg-violet-50 ring-violet-200'
                 )}
               >
@@ -622,7 +622,7 @@ export default function DashboardPage() {
                   : 'bg-emerald-50 ring-1 ring-emerald-200'
               )}
             >
-              <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center shrink-0">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <div className="flex-1 min-w-0">
@@ -631,7 +631,7 @@ export default function DashboardPage() {
                   AI-powered quick entry
                 </div>
               </div>
-              <ChevronRight className={cn('w-5 h-5 flex-shrink-0', darkMode ? 'text-emerald-400' : 'text-emerald-500')} />
+              <ChevronRight className={cn('w-5 h-5 shrink-0', darkMode ? 'text-emerald-400' : 'text-emerald-500')} />
             </Link>
 
             {/* Secondary: 3-column */}

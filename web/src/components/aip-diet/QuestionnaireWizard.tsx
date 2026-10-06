@@ -360,7 +360,7 @@ export function QuestionnaireWizard({ onComplete, darkMode = true }: Props) {
                         <div className="flex items-center gap-2">
                           <div
                             className={cn(
-                              'w-4 h-4 rounded border-2 flex items-center justify-center',
+                              'w-4 h-4 rounded-sm border-2 flex items-center justify-center',
                               isSelected
                                 ? 'bg-blue-500 border-blue-500'
                                 : darkMode
@@ -618,13 +618,13 @@ export function QuestionnaireWizard({ onComplete, darkMode = true }: Props) {
                     {data.restrictions.slice(0, 8).map((r) => (
                       <span
                         key={r.foodName}
-                        className="px-2 py-0.5 rounded text-xs bg-red-500/20 text-red-400"
+                        className="px-2 py-0.5 rounded-sm text-xs bg-red-500/20 text-red-400"
                       >
                         {r.foodName}
                       </span>
                     ))}
                     {data.restrictions.length > 8 && (
-                      <span className="px-2 py-0.5 rounded text-xs bg-slate-700 text-slate-400">
+                      <span className="px-2 py-0.5 rounded-sm text-xs bg-slate-700 text-slate-400">
                         +{data.restrictions.length - 8} more
                       </span>
                     )}
@@ -652,7 +652,7 @@ export function QuestionnaireWizard({ onComplete, darkMode = true }: Props) {
                       return (
                         <span
                           key={goalId}
-                          className="px-2 py-0.5 rounded text-xs bg-green-500/20 text-green-400"
+                          className="px-2 py-0.5 rounded-sm text-xs bg-green-500/20 text-green-400"
                         >
                           {goal?.label || goalId}
                         </span>

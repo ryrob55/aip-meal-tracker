@@ -230,7 +230,7 @@ export default function AISetupPage() {
                   darkMode ? 'text-zinc-400' : 'text-zinc-600'
                 )}
               >
-                <span className="text-emerald-500 mt-0.5 flex-shrink-0">&#10003;</span>
+                <span className="text-emerald-500 mt-0.5 shrink-0">&#10003;</span>
                 {item}
               </li>
             ))}
@@ -310,7 +310,7 @@ export default function AISetupPage() {
               >
                 <span
                   className={cn(
-                    'w-5 h-5 rounded-full flex items-center justify-center text-xs flex-shrink-0 mt-0.5 font-medium',
+                    'w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5 font-medium',
                     darkMode ? 'bg-zinc-800 text-zinc-300' : 'bg-zinc-100 text-zinc-700'
                   )}
                 >
@@ -358,7 +358,7 @@ export default function AISetupPage() {
                 darkMode
                   ? 'bg-zinc-900 text-white placeholder-zinc-600 ring-1 ring-zinc-800 focus:ring-emerald-500'
                   : 'bg-white text-zinc-900 placeholder-zinc-400 ring-1 ring-zinc-200 focus:ring-emerald-500',
-                'outline-none'
+                'outline-hidden'
               )}
             />
           </div>
@@ -390,7 +390,7 @@ export default function AISetupPage() {
                     setTestStatus('idle')
                   }}
                   className={cn(
-                    'w-full px-3 py-2 rounded-xl text-xs font-mono outline-none transition-colors',
+                    'w-full px-3 py-2 rounded-xl text-xs font-mono outline-hidden transition-colors',
                     darkMode
                       ? 'bg-zinc-900 text-white ring-1 ring-zinc-800 focus:ring-emerald-500'
                       : 'bg-white text-zinc-900 ring-1 ring-zinc-200 focus:ring-emerald-500'
@@ -409,7 +409,7 @@ export default function AISetupPage() {
                     setTestStatus('idle')
                   }}
                   className={cn(
-                    'w-full px-3 py-2 rounded-xl text-xs font-mono outline-none transition-colors',
+                    'w-full px-3 py-2 rounded-xl text-xs font-mono outline-hidden transition-colors',
                     darkMode
                       ? 'bg-zinc-900 text-white ring-1 ring-zinc-800 focus:ring-emerald-500'
                       : 'bg-white text-zinc-900 ring-1 ring-zinc-200 focus:ring-emerald-500'

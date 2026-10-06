@@ -276,13 +276,13 @@ export function FastingWindowPicker({ darkMode = true }: Props) {
         {/* Legend */}
         <div className="flex gap-4 mt-3 justify-center">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded bg-green-500" />
+            <div className="w-3 h-3 rounded-sm bg-green-500" />
             <span className={cn('text-xs', darkMode ? 'text-slate-400' : 'text-slate-600')}>
               Eating Window
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded bg-purple-600/30" />
+            <div className="w-3 h-3 rounded-sm bg-purple-600/30" />
             <span className={cn('text-xs', darkMode ? 'text-slate-400' : 'text-slate-600')}>
               Fasting
             </span>
@@ -342,7 +342,7 @@ export function FastingWindowPicker({ darkMode = true }: Props) {
                 value={data.morningCoffeeTime || '06:30'}
                 onChange={(e) => updateData({ morningCoffeeTime: e.target.value })}
                 className={cn(
-                  'px-2 py-1 rounded text-sm',
+                  'px-2 py-1 rounded-sm text-sm',
                   darkMode
                     ? 'bg-slate-700 text-white border border-slate-600'
                     : 'bg-white text-slate-900 border border-slate-300'
@@ -398,7 +398,7 @@ export function FastingWindowPicker({ darkMode = true }: Props) {
                 value={data.smoothieTime || data.eatingWindowStart}
                 onChange={(e) => updateData({ smoothieTime: e.target.value })}
                 className={cn(
-                  'px-2 py-1 rounded text-sm',
+                  'px-2 py-1 rounded-sm text-sm',
                   darkMode
                     ? 'bg-slate-700 text-white border border-slate-600'
                     : 'bg-white text-slate-900 border border-slate-300'
@@ -454,7 +454,7 @@ export function FastingWindowPicker({ darkMode = true }: Props) {
                 value={data.snackTime || data.eatingWindowEnd}
                 onChange={(e) => updateData({ snackTime: e.target.value })}
                 className={cn(
-                  'px-2 py-1 rounded text-sm',
+                  'px-2 py-1 rounded-sm text-sm',
                   darkMode
                     ? 'bg-slate-700 text-white border border-slate-600'
                     : 'bg-white text-slate-900 border border-slate-300'

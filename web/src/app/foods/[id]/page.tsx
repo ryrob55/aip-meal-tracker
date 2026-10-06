@@ -238,7 +238,7 @@ export default function FoodDetailPage() {
           )}
         >
           <div className="flex items-start gap-2">
-            <Info className="w-4 h-4 text-orange-500 mt-0.5 flex-shrink-0" />
+            <Info className="w-4 h-4 text-orange-500 mt-0.5 shrink-0" />
             <div>
               <h3 className="text-sm font-medium text-orange-500 mb-1">
                 Why is this restricted?

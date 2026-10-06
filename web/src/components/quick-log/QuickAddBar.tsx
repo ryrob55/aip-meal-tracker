@@ -34,7 +34,7 @@ export function QuickAddBar({ favorites, onSelect, darkMode = true }: Props) {
             key={fav.id}
             onClick={() => onSelect(fav)}
             className={cn(
-              'px-3 py-1.5 rounded-full text-xs whitespace-nowrap flex-shrink-0',
+              'px-3 py-1.5 rounded-full text-xs whitespace-nowrap shrink-0',
               darkMode
                 ? 'bg-slate-800 text-slate-300 hover:bg-slate-700'
                 : 'bg-slate-100 text-slate-700 hover:bg-slate-200'

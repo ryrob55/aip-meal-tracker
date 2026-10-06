@@ -310,7 +310,7 @@ export default function TestDetailPage() {
           )}
         >
           <div className="flex items-start gap-3 mb-3">
-            <AlertCircle className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5" />
+            <AlertCircle className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
             <div>
               <h3 className="font-medium">Observation Period (Days 1-3)</h3>
               <p
@@ -345,7 +345,7 @@ export default function TestDetailPage() {
           )}
         >
           <div className="flex items-start gap-3 mb-3">
-            <AlertCircle className="w-5 h-5 text-purple-500 flex-shrink-0 mt-0.5" />
+            <AlertCircle className="w-5 h-5 text-purple-500 shrink-0 mt-0.5" />
             <div>
               <h3 className="font-medium">Confirmation Period (Days 4-7)</h3>
               <p

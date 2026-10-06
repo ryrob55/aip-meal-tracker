@@ -276,7 +276,7 @@ function ExtraSnackCell({
             key={snack.id}
             onClick={() => onView?.(snack)}
             className={cn(
-              'w-full text-left px-1.5 py-1 rounded text-xs leading-tight hover:underline cursor-pointer flex items-center gap-1',
+              'w-full text-left px-1.5 py-1 rounded-sm text-xs leading-tight hover:underline cursor-pointer flex items-center gap-1',
               snack.eaten
                 ? darkMode ? 'text-green-400 bg-green-900/20' : 'text-green-700 bg-green-50'
                 : darkMode ? 'text-slate-300 hover:bg-slate-700/50' : 'text-slate-700 hover:bg-slate-50'
@@ -285,11 +285,11 @@ function ExtraSnackCell({
             <span className="flex-1 truncate font-medium">
               {snack.mealName.replace(/^AIP\s+/i, '')}
             </span>
-            <span className={cn('text-[10px] flex-shrink-0', darkMode ? 'text-slate-500' : 'text-slate-400')}>
+            <span className={cn('text-[10px] shrink-0', darkMode ? 'text-slate-500' : 'text-slate-400')}>
               {Math.round((snack.recipe?.calories ?? snack.calories ?? 0) * (snack.actualServings ?? snack.servings ?? 1))}
             </span>
             {snack.eaten && (
-              <span className="text-green-500 text-[10px] flex-shrink-0">✓</span>
+              <span className="text-green-500 text-[10px] shrink-0">✓</span>
             )}
           </button>
         ))}
@@ -310,7 +310,7 @@ function ExtraSnackCell({
         <button
           onClick={onAdd}
           className={cn(
-            'w-6 h-6 rounded flex items-center justify-center text-sm font-bold transition-colors',
+            'w-6 h-6 rounded-sm flex items-center justify-center text-sm font-bold transition-colors',
             darkMode
               ? 'bg-slate-700/50 text-slate-400 hover:bg-slate-600 hover:text-slate-200'
               : 'bg-slate-100 text-slate-400 hover:bg-slate-200 hover:text-slate-600'
@@ -435,7 +435,7 @@ function MealCell({
             <button
               onClick={() => onMarkEaten?.(meal, true)}
               className={cn(
-                'flex-1 py-1.5 rounded text-xs font-medium transition-colors',
+                'flex-1 py-1.5 rounded-sm text-xs font-medium transition-colors',
                 'bg-green-500/20 text-green-500 hover:bg-green-500 hover:text-white'
               )}
             >
@@ -444,7 +444,7 @@ function MealCell({
             <button
               onClick={() => onMarkSkipped?.(meal, true)}
               className={cn(
-                'px-3 py-1.5 rounded text-xs transition-colors',
+                'px-3 py-1.5 rounded-sm text-xs transition-colors',
                 darkMode
                   ? 'bg-slate-700/50 text-slate-400 hover:bg-slate-600'
                   : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
@@ -457,7 +457,7 @@ function MealCell({
           <button
             onClick={() => onMarkEaten?.(meal, false)}
             className={cn(
-              'flex-1 py-1.5 rounded text-xs font-medium',
+              'flex-1 py-1.5 rounded-sm text-xs font-medium',
               'bg-green-500/30 text-green-400'
             )}
           >
@@ -467,7 +467,7 @@ function MealCell({
           <button
             onClick={() => onMarkSkipped?.(meal, false)}
             className={cn(
-              'flex-1 py-1.5 rounded text-xs',
+              'flex-1 py-1.5 rounded-sm text-xs',
               darkMode ? 'bg-slate-700/50 text-slate-500' : 'bg-slate-100 text-slate-400'
             )}
           >

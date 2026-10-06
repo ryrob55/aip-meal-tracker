@@ -338,7 +338,7 @@ export default function ReportPage() {
                 min="2025-02-01"
                 max={customEnd}
                 className={cn(
-                  'px-2 py-0.5 rounded text-xs border ml-1',
+                  'px-2 py-0.5 rounded-sm text-xs border ml-1',
                   darkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'
                 )}
               />
@@ -350,7 +350,7 @@ export default function ReportPage() {
                 min={customStart}
                 max={format(new Date(), 'yyyy-MM-dd')}
                 className={cn(
-                  'px-2 py-0.5 rounded text-xs border',
+                  'px-2 py-0.5 rounded-sm text-xs border',
                   darkMode ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'
                 )}
               />
@@ -383,12 +383,12 @@ export default function ReportPage() {
             <div className={cn(
               'rounded-xl overflow-hidden print:break-inside-avoid',
               darkMode
-                ? 'bg-gradient-to-br from-slate-800 via-slate-800 to-slate-900 border border-slate-700'
-                : 'bg-gradient-to-br from-white via-slate-50 to-emerald-50 border border-slate-200'
+                ? 'bg-linear-to-br from-slate-800 via-slate-800 to-slate-900 border border-slate-700'
+                : 'bg-linear-to-br from-white via-slate-50 to-emerald-50 border border-slate-200'
             )}>
               <div className="flex items-center gap-6 p-5">
                 {/* Adherence Ring */}
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   <svg viewBox="0 0 120 120" className="w-28 h-28">
                     {/* Background ring */}
                     <circle cx="60" cy="60" r="50" fill="none" strokeWidth="10"
@@ -580,7 +580,7 @@ export default function ReportPage() {
             {report.insights.flags.length > 0 && (
               <div className={cn(
                 cardClass,
-                'border-l-4 !border-l-yellow-500'
+                'border-l-4 border-l-yellow-500!'
               )}>
                 <h2 className={cn('text-sm font-semibold mb-2', 'text-yellow-600 dark:text-yellow-400')}>
                   Flags & Concerns
@@ -871,30 +871,30 @@ export default function ReportPage() {
                                                     {meal.mealName}
                                                   </span>
                                                   {meal.isLeftover && (
-                                                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 shrink-0">
+                                                    <span className="text-[10px] px-1.5 py-0.5 rounded-sm bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 shrink-0">
                                                       Leftover
                                                     </span>
                                                   )}
                                                 </div>
                                                 {/* Line 2: macro pills + status */}
                                                 <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-                                                  <span className={cn('text-[11px] px-1.5 py-0.5 rounded', darkMode ? 'bg-slate-700 text-slate-300' : 'bg-slate-100 text-slate-600')}>
+                                                  <span className={cn('text-[11px] px-1.5 py-0.5 rounded-sm', darkMode ? 'bg-slate-700 text-slate-300' : 'bg-slate-100 text-slate-600')}>
                                                     {meal.calories} cal
                                                   </span>
-                                                  <span className={cn('text-[11px] px-1.5 py-0.5 rounded', darkMode ? 'bg-slate-700 text-slate-300' : 'bg-slate-100 text-slate-600')}>
+                                                  <span className={cn('text-[11px] px-1.5 py-0.5 rounded-sm', darkMode ? 'bg-slate-700 text-slate-300' : 'bg-slate-100 text-slate-600')}>
                                                     {meal.protein}g prot
                                                   </span>
-                                                  <span className={cn('text-[11px] px-1.5 py-0.5 rounded', darkMode ? 'bg-slate-700 text-slate-300' : 'bg-slate-100 text-slate-600')}>
+                                                  <span className={cn('text-[11px] px-1.5 py-0.5 rounded-sm', darkMode ? 'bg-slate-700 text-slate-300' : 'bg-slate-100 text-slate-600')}>
                                                     {meal.netCarbs}g NC
                                                   </span>
-                                                  <span className={cn('text-[11px] px-1.5 py-0.5 rounded', darkMode ? 'bg-slate-700 text-slate-300' : 'bg-slate-100 text-slate-600')}>
+                                                  <span className={cn('text-[11px] px-1.5 py-0.5 rounded-sm', darkMode ? 'bg-slate-700 text-slate-300' : 'bg-slate-100 text-slate-600')}>
                                                     {meal.fat}g fat
                                                   </span>
-                                                  <span className={cn('text-[11px] px-1.5 py-0.5 rounded', darkMode ? 'bg-slate-700 text-slate-300' : 'bg-slate-100 text-slate-600')}>
+                                                  <span className={cn('text-[11px] px-1.5 py-0.5 rounded-sm', darkMode ? 'bg-slate-700 text-slate-300' : 'bg-slate-100 text-slate-600')}>
                                                     {meal.fiber}g fiber
                                                   </span>
                                                   <span className={cn(
-                                                    'text-[11px] px-1.5 py-0.5 rounded font-medium ml-auto',
+                                                    'text-[11px] px-1.5 py-0.5 rounded-sm font-medium ml-auto',
                                                     meal.eaten
                                                       ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
                                                       : meal.skipped

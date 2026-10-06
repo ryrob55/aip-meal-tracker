@@ -71,7 +71,7 @@ export default function InsightsPage() {
       {/* Header */}
       <div className={cn(
         'sticky top-0 z-10 px-4 py-3 border-b',
-        darkMode ? 'bg-slate-900/95 backdrop-blur-sm border-slate-800' : 'bg-white/95 backdrop-blur-sm border-slate-200'
+        darkMode ? 'bg-slate-900/95 backdrop-blur-xs border-slate-800' : 'bg-white/95 backdrop-blur-xs border-slate-200'
       )}>
         <div className="md:max-w-[60%] mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -322,7 +322,7 @@ export default function InsightsPage() {
                         </div>
                         <div className={cn('h-2.5 rounded-full overflow-hidden', darkMode ? 'bg-slate-700' : 'bg-slate-100')}>
                           <div
-                            className="h-full rounded-full bg-gradient-to-r from-sky-500 to-blue-400 animate-progress-fill"
+                            className="h-full rounded-full bg-linear-to-r from-sky-500 to-blue-400 animate-progress-fill"
                             style={{ '--progress-width': `${Math.min(100, meal.proteinShare)}%` } as React.CSSProperties}
                           />
                         </div>
@@ -348,14 +348,14 @@ export default function InsightsPage() {
                         className="flex items-center justify-between py-1.5"
                       >
                         <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                          <span className={cn('text-xs font-medium w-5 flex-shrink-0', darkMode ? 'text-slate-600' : 'text-slate-300')}>
+                          <span className={cn('text-xs font-medium w-5 shrink-0', darkMode ? 'text-slate-600' : 'text-slate-300')}>
                             {i + 1}
                           </span>
                           <span className={cn('text-sm truncate', darkMode ? 'text-slate-200' : 'text-slate-800')}>
                             {food.name}
                           </span>
                         </div>
-                        <div className="flex items-center gap-3 flex-shrink-0 ml-2">
+                        <div className="flex items-center gap-3 shrink-0 ml-2">
                           <span className={cn('text-xs tabular-nums', darkMode ? 'text-slate-500' : 'text-slate-400')}>
                             {food.avgProtein}g P
                           </span>

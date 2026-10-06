@@ -70,7 +70,7 @@ export default function RecipesPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className={cn(
-              "w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500",
+              "w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500",
               darkMode
                 ? "bg-slate-800 border-slate-700 text-slate-100 placeholder-slate-500"
                 : "bg-white border-slate-300 text-slate-800"
@@ -173,7 +173,7 @@ function RecipeCard({
                 <span
                   key={tag}
                   className={cn(
-                    "px-2 py-0.5 rounded text-xs",
+                    "px-2 py-0.5 rounded-sm text-xs",
                     darkMode ? "bg-amber-900/30 text-amber-400" : "bg-amber-50 text-amber-700"
                   )}
                 >
@@ -286,25 +286,25 @@ function AddRecipeModal({ onClose }: { onClose: () => void }) {
                     placeholder="Quantity"
                     value={ing.quantity}
                     onChange={(e) => updateIngredient(i, 'quantity', e.target.value)}
-                    className="w-20 px-2 py-1.5 border border-slate-300 rounded text-sm"
+                    className="w-20 px-2 py-1.5 border border-slate-300 rounded-sm text-sm"
                   />
                   <input
                     placeholder="Unit"
                     value={ing.unit}
                     onChange={(e) => updateIngredient(i, 'unit', e.target.value)}
-                    className="w-20 px-2 py-1.5 border border-slate-300 rounded text-sm"
+                    className="w-20 px-2 py-1.5 border border-slate-300 rounded-sm text-sm"
                   />
                   <input
                     placeholder="Ingredient"
                     value={ing.item}
                     onChange={(e) => updateIngredient(i, 'item', e.target.value)}
-                    className="flex-1 px-2 py-1.5 border border-slate-300 rounded text-sm"
+                    className="flex-1 px-2 py-1.5 border border-slate-300 rounded-sm text-sm"
                   />
                   {formData.ingredients.length > 1 && (
                     <button
                       type="button"
                       onClick={() => removeIngredient(i)}
-                      className="px-2 text-red-500 hover:bg-red-50 rounded"
+                      className="px-2 text-red-500 hover:bg-red-50 rounded-sm"
                     >
                       ×
                     </button>

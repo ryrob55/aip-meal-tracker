@@ -182,9 +182,9 @@ export default function NewReintroPage() {
                 </p>
               </div>
               {expandedStage === Number(stage) ? (
-                <ChevronUp className="w-4 h-4 flex-shrink-0" />
+                <ChevronUp className="w-4 h-4 shrink-0" />
               ) : (
-                <ChevronDown className="w-4 h-4 flex-shrink-0" />
+                <ChevronDown className="w-4 h-4 shrink-0" />
               )}
             </button>
 
@@ -310,7 +310,7 @@ export default function NewReintroPage() {
         <div
           className={cn(
             'fixed bottom-0 left-0 right-0 p-4',
-            darkMode ? 'bg-slate-900/90 backdrop-blur' : 'bg-white/90 backdrop-blur border-t border-slate-200'
+            darkMode ? 'bg-slate-900/90 backdrop-blur-sm' : 'bg-white/90 backdrop-blur-sm border-t border-slate-200'
           )}
         >
           <div className="mb-2 text-center">

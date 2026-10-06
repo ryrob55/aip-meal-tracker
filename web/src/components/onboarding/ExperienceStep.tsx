@@ -81,7 +81,7 @@ export function ExperienceStep({ darkMode = true }: Props) {
                     </span>
                     <div
                       className={cn(
-                        'w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0',
+                        'w-5 h-5 rounded-full flex items-center justify-center shrink-0',
                         isSelected
                           ? 'bg-green-500'
                           : darkMode

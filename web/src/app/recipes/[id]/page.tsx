@@ -81,8 +81,8 @@ export default function RecipeDetailPage() {
       <main className={cn("min-h-screen p-6", darkMode ? "bg-slate-900" : "bg-slate-50")}>
         <div className="max-w-3xl mx-auto">
           <div className="animate-pulse">
-            <div className={cn("h-8 rounded w-1/3 mb-6", darkMode ? "bg-slate-700" : "bg-slate-200")}></div>
-            <div className={cn("h-64 rounded mb-6", darkMode ? "bg-slate-700" : "bg-slate-200")}></div>
+            <div className={cn("h-8 rounded-sm w-1/3 mb-6", darkMode ? "bg-slate-700" : "bg-slate-200")}></div>
+            <div className={cn("h-64 rounded-sm mb-6", darkMode ? "bg-slate-700" : "bg-slate-200")}></div>
           </div>
         </div>
       </main>
@@ -112,7 +112,7 @@ export default function RecipeDetailPage() {
 
   return (
     <main className={cn(
-      "min-h-screen bg-gradient-to-b p-4 md:p-6",
+      "min-h-screen bg-linear-to-b p-4 md:p-6",
       darkMode ? "from-slate-900 to-slate-800" : "from-amber-50 to-orange-50"
     )}>
       <div className="max-w-3xl mx-auto">
@@ -149,7 +149,7 @@ export default function RecipeDetailPage() {
         {/* Recipe Card */}
         <article className={cn("rounded-2xl shadow-lg overflow-hidden", darkMode ? "bg-slate-800" : "bg-white")}>
           {/* Title Section */}
-          <div className="bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-8 text-white">
+          <div className="bg-linear-to-r from-amber-500 to-orange-500 px-6 py-8 text-white">
             <h1 className="text-3xl md:text-4xl font-bold mb-3">{recipe.name}</h1>
 
             {/* Meta info */}
@@ -231,7 +231,7 @@ export default function RecipeDetailPage() {
                       key={i}
                       className={cn("flex items-start gap-3 py-2 border-b last:border-0", darkMode ? "border-slate-700" : "border-slate-100")}
                     >
-                      <span className="w-2 h-2 mt-2 rounded-full bg-amber-400 flex-shrink-0" />
+                      <span className="w-2 h-2 mt-2 rounded-full bg-amber-400 shrink-0" />
                       <span className={darkMode ? "text-slate-300" : "text-slate-700"}>
                         {ing.quantity && (
                           <span className={cn("font-semibold", darkMode ? "text-slate-100" : "text-slate-900")}>{ing.quantity} </span>
@@ -346,7 +346,7 @@ function RecipeEditView({
           </button>
         </header>
 
-        <form onSubmit={handleSubmit} className={cn("rounded-xl shadow-sm p-6 space-y-6", darkMode ? "bg-slate-800" : "bg-white")}>
+        <form onSubmit={handleSubmit} className={cn("rounded-xl shadow-xs p-6 space-y-6", darkMode ? "bg-slate-800" : "bg-white")}>
           {/* Name */}
           <div>
             <label className={cn("block text-sm font-medium mb-1", darkMode ? "text-slate-300" : "text-slate-700")}>
