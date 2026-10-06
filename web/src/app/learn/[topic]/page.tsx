@@ -432,7 +432,7 @@ export default function TopicPage({ params }: { params: Promise<{ topic: string 
                         darkMode ? 'text-slate-400' : 'text-slate-600'
                       )}
                     >
-                      <span className="mt-0.5 flex-shrink-0">&#8226;</span>
+                      <span className="mt-0.5 shrink-0">&#8226;</span>
                       {item}
                     </li>
                   ))}

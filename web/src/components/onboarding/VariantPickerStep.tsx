@@ -95,7 +95,7 @@ export function VariantPickerStep({ darkMode = true }: Props) {
                 </div>
                 <div
                   className={cn(
-                    'w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5',
+                    'w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5',
                     isSelected
                       ? 'bg-green-500'
                       : darkMode
@@ -124,7 +124,7 @@ export function VariantPickerStep({ darkMode = true }: Props) {
                       darkMode ? 'text-slate-400' : 'text-slate-600'
                     )}
                   >
-                    <span className="mt-0.5 flex-shrink-0">&#8226;</span>
+                    <span className="mt-0.5 shrink-0">&#8226;</span>
                     {detail}
                   </li>
                 ))}
@@ -145,7 +145,7 @@ export function VariantPickerStep({ darkMode = true }: Props) {
           <button
             onClick={() => updateData({ doctorRecommended: !data.doctorRecommended })}
             className={cn(
-              'w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0',
+              'w-5 h-5 rounded-sm border-2 flex items-center justify-center shrink-0',
               data.doctorRecommended
                 ? 'bg-green-500 border-green-500'
                 : darkMode

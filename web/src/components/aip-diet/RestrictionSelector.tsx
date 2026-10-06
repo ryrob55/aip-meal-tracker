@@ -89,7 +89,7 @@ export function RestrictionSelector({ darkMode = true }: Props) {
               <div className="flex items-center gap-2">
                 <div
                   className={cn(
-                    'w-4 h-4 rounded border-2 flex items-center justify-center',
+                    'w-4 h-4 rounded-sm border-2 flex items-center justify-center',
                     isSelected(item.foodName)
                       ? 'bg-red-500 border-red-500'
                       : darkMode
@@ -180,7 +180,7 @@ export function RestrictionSelector({ darkMode = true }: Props) {
                 <div className="flex items-center gap-2">
                   <div
                     className={cn(
-                      'w-4 h-4 rounded border-2 flex items-center justify-center',
+                      'w-4 h-4 rounded-sm border-2 flex items-center justify-center',
                       isSelected(item.foodName)
                         ? 'bg-orange-500 border-orange-500'
                         : darkMode

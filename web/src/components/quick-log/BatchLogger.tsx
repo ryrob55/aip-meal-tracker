@@ -96,7 +96,7 @@ export function BatchLogger({ date, onSave, isSaving, darkMode = true }: Props) 
                 <button
                   onClick={() => removeMeal(index)}
                   className={cn(
-                    'p-1 rounded',
+                    'p-1 rounded-sm',
                     darkMode ? 'text-slate-600 hover:text-red-400' : 'text-slate-400 hover:text-red-500'
                   )}
                 >
@@ -140,7 +140,7 @@ export function BatchLogger({ date, onSave, isSaving, darkMode = true }: Props) 
                       )
                     }
                     className={cn(
-                      'w-full px-2 py-1 rounded text-xs',
+                      'w-full px-2 py-1 rounded-sm text-xs',
                       darkMode
                         ? 'bg-slate-700 border border-slate-600 text-white'
                         : 'bg-white border border-slate-300'

@@ -162,7 +162,7 @@ export function MealSlot({
             <button
               onClick={onEdit}
               className={cn(
-                'p-1 rounded hover:bg-slate-700/50',
+                'p-1 rounded-sm hover:bg-slate-700/50',
                 darkMode ? 'text-slate-400' : 'text-slate-500'
               )}
             >
@@ -184,7 +184,7 @@ export function MealSlot({
           {hasMeal && onRemove && (
             <button
               onClick={onRemove}
-              className="p-1 rounded hover:bg-red-500/20 text-red-400"
+              className="p-1 rounded-sm hover:bg-red-500/20 text-red-400"
             >
               <svg
                 className="w-4 h-4"
@@ -257,7 +257,7 @@ export function MealSlot({
               <div className="mt-2">
                 <span
                   className={cn(
-                    'inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs',
+                    'inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-xs',
                     'bg-yellow-500/20 text-yellow-400'
                   )}
                 >

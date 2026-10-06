@@ -5,15 +5,16 @@ import { getUserId, isAuthError } from '@/lib/auth-helpers'
 // GET /api/recipes/[id] - Get a single recipe
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const userId = await getUserId()
     if (isAuthError(userId)) return userId
 
     const recipe = await prisma.recipe.findFirst({
       where: {
-        id: params.id,
+        id: id,
         OR: [{ userId }, { userId: null }],
       },
     })
@@ -38,16 +39,17 @@ export async function GET(
 // PUT /api/recipes/[id] - Update a recipe
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const userId = await getUserId()
     if (isAuthError(userId)) return userId
 
     // Verify ownership (allow editing own recipes and legacy ones)
     const existing = await prisma.recipe.findFirst({
       where: {
-        id: params.id,
+        id: id,
         OR: [{ userId }, { userId: null }],
       },
     })
@@ -58,7 +60,7 @@ export async function PUT(
     const body = await request.json()
 
     const recipe = await prisma.recipe.update({
-      where: { id: params.id },
+      where: { id: id },
       data: {
         name: body.name,
         ingredients: body.ingredients,
@@ -92,16 +94,17 @@ export async function PUT(
 // DELETE /api/recipes/[id] - Delete a recipe
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const userId = await getUserId()
     if (isAuthError(userId)) return userId
 
     // Verify ownership
     const existing = await prisma.recipe.findFirst({
       where: {
-        id: params.id,
+        id: id,
         OR: [{ userId }, { userId: null }],
       },
     })
@@ -110,7 +113,7 @@ export async function DELETE(
     }
 
     await prisma.recipe.delete({
-      where: { id: params.id },
+      where: { id: id },
     })
 
     return NextResponse.json({ success: true })

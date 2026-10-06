@@ -34,7 +34,7 @@ export function NutrientNudge({ nudge, darkMode = true }: Props) {
         {nudge.daysSinceLast != null && (
           <span
             className={cn(
-              'text-[10px] px-1.5 py-0.5 rounded',
+              'text-[10px] px-1.5 py-0.5 rounded-sm',
               darkMode ? 'bg-slate-700 text-slate-400' : 'bg-slate-100 text-slate-500'
             )}
           >

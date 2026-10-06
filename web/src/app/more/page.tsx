@@ -103,7 +103,7 @@ export default function MorePage() {
               >
                 <item.icon
                   className={cn(
-                    'w-5 h-5 flex-shrink-0',
+                    'w-5 h-5 shrink-0',
                     darkMode ? 'text-zinc-400' : 'text-zinc-500'
                   )}
                 />

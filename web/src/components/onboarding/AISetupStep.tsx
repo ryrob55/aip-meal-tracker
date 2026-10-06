@@ -216,7 +216,7 @@ export function AISetupStep({ darkMode = true }: Props) {
             >
               <span
                 className={cn(
-                  'w-4 h-4 rounded-full flex items-center justify-center text-xs flex-shrink-0 mt-0.5',
+                  'w-4 h-4 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5',
                   darkMode ? 'bg-slate-700 text-slate-300' : 'bg-slate-200 text-slate-700'
                 )}
               >
@@ -276,7 +276,7 @@ export function AISetupStep({ darkMode = true }: Props) {
                 value={data.llmBaseUrl || provider.defaultBaseUrl}
                 onChange={(e) => updateData({ llmBaseUrl: e.target.value })}
                 className={cn(
-                  'w-full px-3 py-1.5 rounded text-xs font-mono',
+                  'w-full px-3 py-1.5 rounded-sm text-xs font-mono',
                   darkMode
                     ? 'bg-slate-900 text-white border border-slate-700'
                     : 'bg-white text-slate-900 border border-slate-300'
@@ -292,7 +292,7 @@ export function AISetupStep({ darkMode = true }: Props) {
                 value={data.llmModel || provider.defaultModel}
                 onChange={(e) => updateData({ llmModel: e.target.value })}
                 className={cn(
-                  'w-full px-3 py-1.5 rounded text-xs font-mono',
+                  'w-full px-3 py-1.5 rounded-sm text-xs font-mono',
                   darkMode
                     ? 'bg-slate-900 text-white border border-slate-700'
                     : 'bg-white text-slate-900 border border-slate-300'

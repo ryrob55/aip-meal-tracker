@@ -307,13 +307,13 @@ export function OnboardingWizard({ onComplete, darkMode = true }: Props) {
                     {data.restrictions.slice(0, 10).map((r) => (
                       <span
                         key={r.foodName}
-                        className="px-2 py-0.5 rounded text-xs bg-red-500/20 text-red-400"
+                        className="px-2 py-0.5 rounded-sm text-xs bg-red-500/20 text-red-400"
                       >
                         {r.foodName}
                       </span>
                     ))}
                     {data.restrictions.length > 10 && (
-                      <span className="px-2 py-0.5 rounded text-xs bg-slate-700 text-slate-400">
+                      <span className="px-2 py-0.5 rounded-sm text-xs bg-slate-700 text-slate-400">
                         +{data.restrictions.length - 10} more
                       </span>
                     )}

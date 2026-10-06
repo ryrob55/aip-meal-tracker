@@ -206,7 +206,7 @@ export default function MealsPage() {
             <Button
               onClick={() => suggestMealsMutation.mutate()}
               disabled={suggestMealsMutation.isPending}
-              className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+              className="bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
             >
               {suggestMealsMutation.isPending ? (
                 <Loader2 className="w-4 h-4 sm:mr-2 animate-spin" />
@@ -257,7 +257,7 @@ export default function MealsPage() {
 
         {/* Meal plan grid */}
         <div className={cn(
-          "rounded-xl shadow-sm border p-3 sm:p-6 mb-4 sm:mb-6",
+          "rounded-xl shadow-xs border p-3 sm:p-6 mb-4 sm:mb-6",
           darkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-200"
         )}>
           {isLoading ? (
@@ -350,7 +350,7 @@ export default function MealsPage() {
                                   }}
                                   onBlur={() => setEditingServingsId(null)}
                                   className={cn(
-                                    "text-xs px-2 py-0.5 rounded-full border-none outline-none cursor-pointer",
+                                    "text-xs px-2 py-0.5 rounded-full border-none outline-hidden cursor-pointer",
                                     darkMode ? "bg-slate-600 text-slate-200" : "bg-slate-200 text-slate-700"
                                   )}
                                 >
@@ -636,7 +636,7 @@ function RecipeSelectionModal({
               <button
                 onClick={() => setServings(Math.max(1, servings - 1))}
                 className={cn(
-                  "w-6 h-6 flex items-center justify-center rounded text-sm font-bold touch-manipulation",
+                  "w-6 h-6 flex items-center justify-center rounded-sm text-sm font-bold touch-manipulation",
                   darkMode
                     ? "hover:bg-slate-600 text-slate-300"
                     : "hover:bg-slate-100 text-slate-600"
@@ -653,7 +653,7 @@ function RecipeSelectionModal({
               <button
                 onClick={() => setServings(servings + 1)}
                 className={cn(
-                  "w-6 h-6 flex items-center justify-center rounded text-sm font-bold touch-manipulation",
+                  "w-6 h-6 flex items-center justify-center rounded-sm text-sm font-bold touch-manipulation",
                   darkMode
                     ? "hover:bg-slate-600 text-slate-300"
                     : "hover:bg-slate-100 text-slate-600"
@@ -693,7 +693,7 @@ function RecipeSelectionModal({
 
             {/* Available tag chips */}
             <div className="flex flex-wrap gap-1.5 items-center">
-              <Filter className={cn("w-3.5 h-3.5 flex-shrink-0", darkMode ? "text-slate-500" : "text-slate-400")} />
+              <Filter className={cn("w-3.5 h-3.5 shrink-0", darkMode ? "text-slate-500" : "text-slate-400")} />
               {visibleTags
                 .filter(({ tag }) => !selectedTags.includes(tag))
                 .map(({ tag, count }) => (
@@ -775,7 +775,7 @@ function RecipeSelectionModal({
                     type="checkbox"
                     checked={generateDetails}
                     onChange={(e) => setGenerateDetails(e.target.checked)}
-                    className="rounded border-slate-300"
+                    className="rounded-sm border-slate-300"
                   />
                   Auto-generate with AI
                 </label>
@@ -839,9 +839,9 @@ function RecipeSelectionModal({
                     )}>
                       {recipe.name}
                     </span>
-                    <div className="flex items-center gap-1.5 flex-shrink-0">
+                    <div className="flex items-center gap-1.5 shrink-0">
                       {recipe.isDraft && (
-                        <span className="text-xs px-1.5 py-0.5 bg-amber-500/20 text-amber-500 rounded">
+                        <span className="text-xs px-1.5 py-0.5 bg-amber-500/20 text-amber-500 rounded-sm">
                           Draft
                         </span>
                       )}
@@ -853,7 +853,7 @@ function RecipeSelectionModal({
                         <span
                           key={tag}
                           className={cn(
-                            "text-[10px] px-1.5 py-0.5 rounded",
+                            "text-[10px] px-1.5 py-0.5 rounded-sm",
                             selectedTags.includes(tag)
                               ? darkMode ? "bg-blue-500/20 text-blue-400" : "bg-blue-100 text-blue-600"
                               : darkMode ? "text-slate-500" : "text-slate-400"
@@ -1040,8 +1040,8 @@ function GroceryListModal({
                 "flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all",
                 view === 'inventory'
                   ? darkMode
-                    ? "bg-slate-700 text-white shadow"
-                    : "bg-white text-slate-900 shadow"
+                    ? "bg-slate-700 text-white shadow-sm"
+                    : "bg-white text-slate-900 shadow-sm"
                   : darkMode
                     ? "text-slate-400 hover:text-slate-200"
                     : "text-slate-600 hover:text-slate-900"
@@ -1055,8 +1055,8 @@ function GroceryListModal({
                 "flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all",
                 view === 'shopping'
                   ? darkMode
-                    ? "bg-emerald-600 text-white shadow"
-                    : "bg-emerald-500 text-white shadow"
+                    ? "bg-emerald-600 text-white shadow-sm"
+                    : "bg-emerald-500 text-white shadow-sm"
                   : darkMode
                     ? "text-slate-400 hover:text-slate-200"
                     : "text-slate-600 hover:text-slate-900"
@@ -1146,7 +1146,7 @@ function GroceryListModal({
                             checked: !item.checked,
                           })}
                           className={cn(
-                            "w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all mt-0.5",
+                            "w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-all mt-0.5",
                             item.checked
                               ? "bg-emerald-500 border-emerald-500 text-white"
                               : darkMode
@@ -1174,7 +1174,7 @@ function GroceryListModal({
                             </span>
                             {item.quantity && (
                               <span className={cn(
-                                "text-sm whitespace-nowrap flex-shrink-0",
+                                "text-sm whitespace-nowrap shrink-0",
                                 item.checked
                                   ? darkMode ? "text-slate-600" : "text-slate-400"
                                   : darkMode ? "text-slate-400" : "text-slate-500"
@@ -1312,7 +1312,7 @@ function AISuggestionsModal({
                 key={day.toISOString()}
                 className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 p-3 bg-slate-50 rounded-lg"
               >
-                <div className="sm:w-20 flex-shrink-0 flex sm:block items-center gap-2">
+                <div className="sm:w-20 shrink-0 flex sm:block items-center gap-2">
                   <span className="font-medium text-slate-700">
                     {format(day, 'EEE')}
                   </span>
@@ -1337,7 +1337,7 @@ function AISuggestionsModal({
           <Button
             onClick={() => onApply(editedSuggestions)}
             disabled={isApplying}
-            className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+            className="flex-1 bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
           >
             {isApplying ? (
               <>
